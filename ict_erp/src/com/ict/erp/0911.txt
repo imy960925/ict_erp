@@ -1,0 +1,237 @@
+alter table EMP
+drop constraint fk_deptno;
+drop table emp;
+drop table dept;
+
+create table dept(
+deptno number(2,0),
+deptname varchar2(20),
+deptloc varchar2(100),
+constraint pk_dept primary key(deptno)
+);
+
+create table emp(
+empno number(5,0),
+empname varchar2(30),
+empjob varchar2(10),
+empmgr number(4,0),
+hiredate char(8),
+sal number(7,2),
+comm number(7,2),
+deptno number(2,0),
+constraint pk_emp PRIMARY key(empno),
+constraint fk_deptno foreign key (deptno) references dept(deptno)
+);
+
+insert into dept
+values(10, 'ACCOUNTING', 'NEW YORK');
+insert into dept
+values(20, 'RESEARCH', 'DALLAS');
+insert into dept
+values(30, 'SALES', 'CHICAGO');
+insert into dept
+values(40, 'OPERATIONS', 'BOSTON');
+
+insert into emp
+values(
+ 7839, 'KING', 'PRESIDENT', null,
+ '20180101',
+ 5000, null, 10
+);
+insert into emp
+values(
+ 7698, 'BLAKE', 'MANAGER', 7839,
+ '20170101',
+ 2850, null, 30
+);
+insert into emp
+values(
+ 7782, 'CLARK', 'MANAGER', 7839,
+ '20160101',
+ 2450, null, 10
+);
+insert into emp
+values(
+ 7566, 'JONES', 'MANAGER', 7839,
+ '20170101',
+ 2975, null, 20
+);
+insert into emp
+values(
+ 7788, 'SCOTT', 'ANALYST', 7566,
+ '20170101',
+ 3000, null, 20
+);
+insert into emp
+values(
+ 7902, 'FORD', 'ANALYST', 7566,
+ '20180101',
+ 3000, null, 20
+);
+insert into emp
+values(
+ 7369, 'SMITH', 'CLERK', 7902,
+ '20160101',
+ 800, null, 20
+);
+insert into emp
+values(
+ 7499, 'ALLEN', 'SALESMAN', 7698,
+ '20150101',
+ 1600, 300, 30
+);
+insert into emp
+values(
+ 7521, 'WARD', 'SALESMAN', 7698,
+ '20170301',
+ 1250, 500, 30
+);
+insert into emp
+values(
+ 7654, 'MARTIN', 'SALESMAN', 7698,
+ '20170801',
+ 1250, 1400, 30
+);
+insert into emp
+values(
+ 7844, 'TURNER', 'SALESMAN', 7698,
+ '20160401',
+ 1500, 0, 30
+);
+insert into emp
+values(
+ 7876, 'ADAMS', 'CLERK', 7788,
+ '20180101',
+ 1100, null, 20
+);
+insert into emp
+values(
+ 7900, 'JAMES', 'CLERK', 7698,
+ '20150101',
+ 950, null, 30
+);
+insert into emp
+values(
+ 7934, 'MILLER', 'CLERK', 7782,
+ '20150101',
+ 1300, null, 10
+);
+commit;
+
+
+select * from emp;
+select * from dept;
+select d.deptname,count(*) from emp e, dept d where e.deptno = d.deptno group by d.deptno, d.deptname;
+select * from emp e, dept d;
+
+
+
+
+select ed2.*, e3.empname as minname from (
+select ed.*, e2.empname as maxname from (
+select d.deptno, d.deptname, count(*), max(e.sal) maxsal, min(e.sal) minsal, floor(avg(e.sal)) avgsal, sum(e.sal) sumsal 
+from emp e, dept d 
+where e.deptno=d.deptno 
+group by d.deptno, d.deptname) ed, emp e2 
+where ed.deptno=e2.deptno and ed.maxsal = e2.sal) ed2, emp e3 
+where ed2.deptno=e3.deptno and ed2.minsal = e3.sal;
+
+
+
+select ed.*, e2.empname as maxname, e3.empname as minname from(
+select d.deptno, d.deptname, count(*), max(e.sal) maxsal, min(e.sal) minsal, floor(avg(e.sal)) avgsal, sum(e.sal) sumsal 
+from emp e, dept d 
+where e.deptno=d.deptno 
+group by d.deptno, d.deptname) ed, emp e2 
+where ed.deptno=e2.deptno and ed.maxsal = e2.sal;
+
+
+
+
+create view v_empinfo as select d.deptno, d.deptname, count(*) cnt, max(e.sal) maxsal, min(e.sal) minsal, floor(avg(e.sal)) avgsal, sum(e.sal) sumsal from emp e, dept d where e.deptno=d.deptno group by d.deptno, d.deptname;
+
+
+
+
+select * from v_empinfo;
+
+select ve.* e1.empname, e2.empname
+from v_emp9info ve, emp e1, emp e2
+where e1.deptno=ve.diptno
+and e1.sal = ve.maxsal
+and e2.deptno=ve.deptno;
+
+select * from (
+select substr(hiredate,1,4), count(*) cnt from emp group by substr(hiredate,1,4)) where cnt=3;
+
+select substr(hiredate,1,4), count(*) cnt from emp group by substr(hiredate,1,4) having count(*) = 3;
+
+select * from emp;
+select * from emp e1 emp e3 where e1.empmgr = w2,empno;
+
+select e1.empno, e1.empname, e2.empname, as mgrname from emp e1, emp e2 where e1.empmgr = e2.empno(+) and e2.empname is null;
+
+
+select * from dept;
+
+select distinct deptno, count(*) from emp;
+
+select d.deptno, d.deptname, count(*) from emp e, dept d where e.deptno(+) = d.deptno group by d.deptno, d.deptname;
+
+select deptno, deptname, (select count(*) from emp e where e.deptno=d.deptno) as cnt from dept d;
+
+select * from emp;
+
+select trunc(sal,-3), count(*) from emp group by trunc(sal, -3) order by 1;
+
+--1. 샐러리가 정체평균보다 높은 사람들을 출력
+select d.deptno, d.deptname, count(*) cnt, max(e.sal) maxsal, min(e.sal) minsal, floor(avg(e.sal)) avgsal, sum(e.sal) sumsal from emp e, dept d where e.deptno=d.deptno group by d.deptno, d.deptname;
+
+select * from emp;
+select * from dept;
+
+select e.empname, e.sal from emp e where avg(e.sal) < sal group by e.sal,e.empname;
+
+select * from emp where sal>(select avg(e.sal) from emp e);
+
+select e1.* from emp e1 where sal>(select avg(e2.sal) from emp e2 where e1.deptno = e2.deptno) order by sal;
+
+
+--1. 샐러리가 정체평균보다 높은 부서 출력
+select e.* from emp e where e.sal >
+(select avg(sal) from emp where deptno=10);
+
+select e.*,
+(select floor(avg(sal)) from emp e2 where e2.deptno=e.deptno) avgsal from emp e, dept d where ;
+
+
+
+select floor(avg(e.sal)) from emp e where e.deptno=10;
+
+select e1.* from emp e1 where e1.deptno=10; 
+
+select e.* ,a.* from (select * from emp where deptno=30) e, 
+(select deptno, floor(avg(sal)) avgsal from emp where deptno=30 group by deptno) a 
+where e.deptno = a.deptno;
+
+
+-- deptno가 10인애들 20인애들 30인애들 40인애들의 쿼리를 작성하라
+select deptno, floor(avg(sal)) from emp where deptno=10 group by deptno union
+select deptno, floor(avg(sal)) from emp where deptno=20 group by deptno union
+select deptno, floor(avg(sal)) from emp where deptno=30 group by deptno;
+
+select deptno, floor(avg(sal)) from emp group by deptno;
+
+select empno, empname, sal, e.deptno, e2.* from emp e,(select deptno, floor(avg(sal)) from emp group by deptno) e2 where e2.deptno=e.deptno;
+
+select empno, empname, sal, e2.* from emp e,(select deptno, floor(avg(sal)) from emp group by deptno) e2;
+select * from emp;
+select empno, empname, sal, deptno from emp;
+select e2.* from (select deptno, floor(avg(sal)), count(*) from emp group by deptno) e2;
+select empno, empname from emp;
+
+
+-- 입사일 기준 월급에 대한 평균
+select * from emp;
+select hiredate, floor(avg(sal)) from emp e, (select hiredate, floor(avg(sal)) from emp group by hiredate) e2 where e2.hiredate= e.hiredate;
+

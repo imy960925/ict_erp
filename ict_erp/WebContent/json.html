@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>번호</th>
+				<th>음식명</th>
+				<th>가격</th>
+				<th>음식설명</th>
+				<th>버튼</th>
+			</tr>
+		</thead>
+
+
+		<tbody id="tBody">
+		</tbody>
+	</table>
+	<button type="button" id="btn">제이슨테스트</button>
+	<script>
+		document.querySelector('#btn').onclick = function() {
+			var req = new XMLHttpRequest();
+
+			req.onreadystatechange = function() {
+				if (req.readyState == req.DONE) {
+					if (req.status == 200) {
+						var obj = JSON.parse(req.responseText);
+						console.log(obj);
+						var html = '';
+						//for(var i=0;i<obj.length;i++) {
+						html += '<tr>';
+						html += '<td>' + obj.meiNum + '</td>';
+						html += '<td>' + obj.meiName + '</td>';
+						html += '<td>' + obj.meiPrice + '</td>';
+						html += '<td>' + obj.meiDesc + '</td>';
+						html += '<td><button>버튼</button></td>';
+						html += '<tr>';
+						//}
+						document.querySelector('#tBody').innerHTML = html;
+					} else {
+
+					}
+
+				}
+			}
+			var param = {
+				name : '홍길동',
+				age : '33',
+				address : 'seoul'
+			};
+			console.log(param);
+			param = encodeURIComponent(JSON.stringify(param));
+			console.log(param);
+			req.open('POST','json/list');
+			req.send();
+		}
+	</script>
+</body>
+</html>
