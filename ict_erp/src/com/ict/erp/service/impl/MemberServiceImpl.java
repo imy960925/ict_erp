@@ -75,15 +75,44 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Map<String, Object> updateMi(MemberInfo mi) {
+	public Map<String, Object> updateMi(MemberInfo mi) throws SQLException{
+		mdao.setConnection(DBCon.getCon());
+		Map<String,Object> updateMap = new HashMap<String,Object>();
+		try {
+			int cnt = mdao.updateMi(mi);
+			updateMap.put("cnt", cnt);
+			if(cnt==1) {
+				updateMap.put("msg", "성공하였습니다");
+			}else {
+				updateMap.put("msg", "실패하였습니다");
+			}
+			return updateMap;
+		}catch(SQLException e) {
+			throw e;
+		}finally {
+			
+		}
 		
-		return null;
 	}
 
 	@Override
-	public Map<String, Object> deleteMi(MemberInfo mi) {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, Object> deleteMi(MemberInfo mi) throws SQLException {
+		mdao.setConnection(DBCon.getCon());
+		Map<String,Object> dMap = new HashMap<String,Object>();
+		try {
+			int cnt = mdao.deleteMi(mi);
+			dMap.put("cnt", cnt);
+			if(cnt==1) {
+				dMap.put("msg", "성공하였습니다");
+				
+			}else {
+				dMap.put("msg", "실패하였습니다");
+			}
+			return dMap;
+		}catch(SQLException e) {
+			throw e;
+		}
+		
 	}
 
 }

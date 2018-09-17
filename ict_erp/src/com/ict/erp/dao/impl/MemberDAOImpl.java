@@ -16,10 +16,7 @@ public class MemberDAOImpl extends CommonDAOImpl implements MemberDAO {
 	@Override
 	public List<MemberInfo> selectMiList(MemberInfo mi) throws SQLException {
 		List<MemberInfo> selectMiList = new ArrayList<MemberInfo>();
-		String sql = "select MI.*,DI.DINAME, LI.LINAME FROM\r\n" + 
-				"MEMBER_INFO MI, DEPART_INFO DI, LEVEL_INFO LI\r\n" + 
-				"WHERE MI.DICODE = DI.DICODE\r\n" + 
-				"AND MI.LILEVEL = LI.LILEVEL";
+		String sql = "select * from Member_info";
 		try {
 		ps = con.prepareStatement(sql);
 		rs = ps.executeQuery();
@@ -127,15 +124,60 @@ public class MemberDAOImpl extends CommonDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public int updateMi(MemberInfo mi) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateMi(MemberInfo mi) throws SQLException {
+		String sql = "update Member_info";
+		sql += " set miNum=?";
+		sql += " miId=?";
+		sql += " miName=?";
+		sql += " mipwd=?";
+		sql += " diCode=?";
+		sql += " liLevel=?";
+		sql += " miEmail=?";
+		sql += " miDesc=?";
+		sql += " miPhone=?";
+		sql += " miZipCode=?";
+		sql += " miAddress1=?";
+		sql += " miAddress2=?";
+	try {
+		ps=con.prepareStatement(sql);
+		rs=ps.executeQuery();
+		ps.setLong(1, mi.getMiNum());
+		ps.setString(2, mi.getMiId());
+		ps.setString(3, mi.getMiName());
+		ps.setString(4, mi.getMiPwd());
+		ps.setString(5, mi.getDiCode());
+		ps.setLong(6,mi.getLiLevel());
+		ps.setString(7, mi.getMiEmail());
+		ps.setString(8, mi.getMiDesc());
+		ps.setString(9, mi.getMiPhone());
+		ps.setString(10, mi.getMiZipCode());
+		ps.setString(11, mi.getMiAddress1());
+		ps.setString(12, mi.getMiAddress2());
+		
+		
+		
+	}catch(SQLException e) {
+		throw e;
+	}finally {
+		close();
+	}
+	return ps.executeUpdate();
+		
 	}
 
 	@Override
-	public int deleteMi(MemberInfo mi) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int deleteMi(MemberInfo mi) throws SQLException{
+		String sql = "delete from Member_info where miNum=?";
+		try {
+			ps=con.prepareStatement(sql);
+			ps.setLong(1, mi.getMiNum());
+			return ps.executeUpdate();
+		}catch(SQLException e) {
+			throw e;
+		}finally {
+			
+		}
+
 	}
 
 }

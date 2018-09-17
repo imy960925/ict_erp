@@ -10,6 +10,6 @@ public interface MemberDAO extends Common {
 public List<MemberInfo> selectMiList(MemberInfo mi) throws SQLException;
 public MemberInfo selectMi(MemberInfo mi) throws SQLException;
 public int insertMi(MemberInfo mi) throws SQLException;
-public int updateMi(MemberInfo mi);
-public int deleteMi(MemberInfo mi);
+public int updateMi(MemberInfo mi) throws SQLException;
+public int deleteMi(MemberInfo mi) throws SQLException;
 }
