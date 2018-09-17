@@ -69,8 +69,17 @@ public class TicketMovieServiceImpl implements TicketMovieService {
 	@Override
 	public Map<String, Object> updateMi(TicketMovieInfo tmi) throws SQLException {
 		tmda.setConnection(DBCon.getCon());
+		Map<String,Object> tMap = new HashMap<String,Object>();
 		try {
-			return tmda.updateMi(0);
+			int cnt = tmda.updateMi(tmi);
+			tMap.put("cnt", cnt);
+			if(cnt==1) {
+				tMap.put("msg", "성공하였습니다");
+			}else {
+				tMap.put("msg", "실패하였습니다");
+				
+			}
+			return tMap;
 		}catch(SQLException e) {
 			throw e;
 		}finally {
@@ -106,9 +115,28 @@ public class TicketMovieServiceImpl implements TicketMovieService {
 		
 
 	@Override
-	public Map<String, Object> deleteMi(TicketMovieInfo tmi) {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, Object> deleteMi(TicketMovieInfo tmi) throws SQLException {
+		tmda.setConnection(DBCon.getCon());
+		try {
+			Map<String,Object> tMap = new HashMap<String,Object>();
+			int cnt = tmda.deleteMi(tmi);
+			tMap.put("cnt", cnt);
+			if(cnt==1) {
+				tMap.put("msg", "성공하였습니다");
+			}else {
+				tMap.put("msg", "실패하였습니다");
+			}
+			return tMap;
+		
+			}catch(SQLException e) {
+				throw e;
+				
+			}finally {
+				DBCon.close();
+		}
+		
+		
+		
 	}
 
 }

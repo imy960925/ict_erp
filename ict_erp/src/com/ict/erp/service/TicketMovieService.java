@@ -12,5 +12,5 @@ public interface TicketMovieService {
 	public TicketMovieInfo selectMi(TicketMovieInfo tmi) throws SQLException;
 	public Map<String,Object>insertMi(TicketMovieInfo tmi) throws SQLException;
 	public Map<String,Object>updateMi(TicketMovieInfo tmi) throws SQLException;
-	public Map<String,Object>deleteMi(TicketMovieInfo tmi);
+	public Map<String,Object>deleteMi(TicketMovieInfo tmi) throws SQLException;
 }

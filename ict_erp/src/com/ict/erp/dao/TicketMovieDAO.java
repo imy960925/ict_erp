@@ -10,6 +10,6 @@ public interface TicketMovieDAO extends Common {
 	public List<TicketMovieInfo> selectMiList(TicketMovieInfo tmi) throws SQLException;
 	public TicketMovieInfo selectMi(TicketMovieInfo tmi) throws SQLException;
 	public int insertMi(TicketMovieInfo tmi) throws SQLException;
-	public int updateMi(int i);
+	public int updateMi(TicketMovieInfo tmi)throws SQLException;
 	public int deleteMi(TicketMovieInfo tmi) throws SQLException;
 }
